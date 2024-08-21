@@ -7,6 +7,7 @@ import {Switch} from '../switch'
 function Toggle({children}) {
   const [on, setOn] = React.useState(false)
   const toggle = () => setOn(!on)
+
   return React.Children.map(children, child =>
     React.cloneElement(child, {on, toggle}),
   )
