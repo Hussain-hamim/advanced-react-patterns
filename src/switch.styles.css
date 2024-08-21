@@ -41,7 +41,10 @@ by Mauricio Allende (https://mallendeo.com/)
   left: 50%;
 }
 .toggle-btn.toggle-btn-on {
-  background: #86d993;
+  background: #3e3f3e;
+}
+.toggle-btn.toggle-btn-off {
+  background: #a68243;
 }
 .toggle-btn.toggle-btn-on:active {
   box-shadow: none;
