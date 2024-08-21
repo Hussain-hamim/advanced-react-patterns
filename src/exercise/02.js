@@ -1,4 +1,4 @@
-// Compound Components
+// Support non-toggle children
 // http://localhost:3000/isolated/final/02.js
 
 import * as React from 'react'
@@ -8,9 +8,13 @@ function Toggle({children}) {
   const [on, setOn] = React.useState(false)
   const toggle = () => setOn(!on)
 
-  return React.Children.map(children, child =>
-    React.cloneElement(child, {on, toggle}),
-  )
+  return React.Children.map(children, child => {
+    if (typeof child.type === 'string') {
+      return child
+    }
+    const newChild = React.cloneElement(child, {on, toggle})
+    return newChild
+  })
 }
 
 function ToggleOn({on, children}) {
@@ -31,6 +35,7 @@ function App() {
       <Toggle>
         <ToggleOn>The button is on</ToggleOn>
         <ToggleOff>The button is off</ToggleOff>
+        <span>Hello</span>
         <ToggleButton />
       </Toggle>
     </div>
