@@ -1,5 +1,6 @@
 // Flexible Compound Components with context
-// http://localhost:3000/isolated/final/03.js
+// 💯 custom hook validation
+// http://localhost:3000/isolated/final/03.extra-1.js
 
 import * as React from 'react'
 import {Switch} from '../switch'
@@ -19,7 +20,11 @@ function Toggle({children}) {
 }
 
 function useToggle() {
-  return React.useContext(ToggleContext)
+  const context = React.useContext(ToggleContext)
+  if (context === undefined) {
+    throw new Error('useToggle must be used within a <Toggle />')
+  }
+  return context
 }
 
 function ToggleOn({children}) {
