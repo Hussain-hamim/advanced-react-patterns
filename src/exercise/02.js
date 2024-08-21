@@ -1,47 +1,38 @@
 // Compound Components
-// http://localhost:3000/isolated/exercise/02.js
+// http://localhost:3000/isolated/final/02.js
 
 import * as React from 'react'
 import {Switch} from '../switch'
 
-function Container({children}) {
-  const [count, setcount] = React.useState(0)
-  const counterPlus = () => setcount(c => c + 1)
-  const counterMinus = () => setcount(c => c - 1)
+function Toggle({children}) {
+  const [on, setOn] = React.useState(false)
+  const toggle = () => setOn(!on)
 
   return React.Children.map(children, child =>
-    React.cloneElement(child, {count, counterPlus, counterMinus}),
+    React.cloneElement(child, {on, toggle}),
   )
 }
 
-function One({count}) {
-  return count === 3 ? <p>this one comp: {count}</p> : null
-}
-function Two({count}) {
-  return <p>this two comp: {count}</p>
-}
-function Three({count}) {
-  return <p>this three comp: {count}</p>
+function ToggleOn({on, children}) {
+  return on ? children : null
 }
 
-function BtnPlus({counterPlus}) {
-  return <button onClick={counterPlus}>Plus 1</button>
+function ToggleOff({on, children}) {
+  return on ? null : children
 }
 
-function BtnMinus({counterMinus}) {
-  return <button onClick={counterMinus}>Minus 1</button>
+function ToggleButton({on, toggle, ...props}) {
+  return <Switch on={on} onClick={toggle} {...props} />
 }
 
 function App() {
   return (
     <div>
-      <Container>
-        <One />
-        <Two />
-        <Three />
-        <BtnPlus />
-        <BtnMinus />
-      </Container>
+      <Toggle>
+        <ToggleOn>The button is on</ToggleOn>
+        <ToggleOff>The button is off</ToggleOff>
+        <ToggleButton />
+      </Toggle>
     </div>
   )
 }
