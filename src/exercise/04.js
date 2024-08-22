@@ -8,6 +8,9 @@ function useToggle() {
   const [on, setOn] = React.useState(false)
   const toggle = () => setOn(!on)
 
+  // a utility fn that take multiple fns and return a new fn that call all
+  // fns with provided arguments.
+  // this allow multiple onClick handlers
   function callAll(...fns) {
     return (...args) => {
       fns.forEach(fn => {
