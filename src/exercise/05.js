@@ -1,5 +1,6 @@
-// State Reducer
-// http://localhost:3000/isolated/exercise/05.js
+// state reducer
+// 💯 default state reducer
+// http://localhost:3000/isolated/final/05.extra-1.js
 
 import * as React from 'react'
 import {Switch} from '../switch'
@@ -30,7 +31,6 @@ function useToggle({initialOn = false, reducer = toggleReducer} = {}) {
 
   const toggle = () => dispatch({type: 'toggle'})
   const reset = () => dispatch({type: 'reset', initialState})
-
   function getTogglerProps({onClick, ...props} = {}) {
     return {
       'aria-pressed': on,
@@ -54,28 +54,19 @@ function useToggle({initialOn = false, reducer = toggleReducer} = {}) {
     getResetterProps,
   }
 }
+// export {useToggle, toggleReducer}
+
+// import {useToggle, toggleReducer} from './use-toggle'
 
 function App() {
   const [timesClicked, setTimesClicked] = React.useState(0)
   const clickedTooMuch = timesClicked >= 4
 
   function toggleStateReducer(state, action) {
-    switch (action.type) {
-      case 'toggle': {
-        // the only difference of this reducer and the default one is that if that
-        // clickedTooMuch is true then disallow the on change state mean always stay the same
-        if (clickedTooMuch) {
-          return {on: state.on}
-        }
-        return {on: !state.on}
-      }
-      case 'reset': {
-        return {on: false}
-      }
-      default: {
-        throw new Error(`Unsupported type: ${action.type}`)
-      }
+    if (action.type === 'toggle' && clickedTooMuch) {
+      return {on: state.on}
     }
+    return toggleReducer(state, action)
   }
 
   const {on, getTogglerProps, getResetterProps} = useToggle({
@@ -107,8 +98,3 @@ function App() {
 }
 
 export default App
-
-/*
-eslint
-  no-unused-vars: "off",
-*/
