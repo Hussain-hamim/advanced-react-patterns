@@ -11,6 +11,7 @@ ToggleContext.displayName = 'ToggleContext'
 function Toggle({children}) {
   const [on, setOn] = React.useState(false)
   const toggle = () => setOn(!on)
+  console.lok(first)
 
   return (
     <ToggleContext.Provider value={{on, toggle}}>
