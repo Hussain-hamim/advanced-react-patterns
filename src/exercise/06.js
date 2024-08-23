@@ -39,19 +39,13 @@ function useToggle({
   const {current: initialState} = React.useRef({on: initialOn})
   const [state, dispatch] = React.useReducer(reducer, initialState)
 
-  const onIsControlled = controlledOn != null // it mean that the parent component is controlling the toggle's state
+  const onIsControlled = controlledOn != null
   const on = onIsControlled ? controlledOn : state.on
-  // if onIsControlled is not not null or undefined then get the
-  //on from the parameter which provided by the user of our hook
-  // if it's undefined or not null then get from that default state which is state.on
 
   function dispatchWithOnChange(action) {
-    // if we are controlled from outside then we'll not update our internal state
     if (!onIsControlled) {
       dispatch(action)
     }
-    // the state that we're transition to so use reducer to get that state
-    // so the reducer can give us the new state
     onChange?.(reducer({...state, on}, action), action)
   }
 
