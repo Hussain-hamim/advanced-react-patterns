@@ -1,9 +1,11 @@
 // Control Props
-// http://localhost:3000/isolated/exercise/06.js
+// http://localhost:3000/isolated/final/06.js
 
 import * as React from 'react'
 import {Switch} from '../switch'
 
+// takes multiple fn and return a new fn that call all fns
+//usage: allow you to combine multiple event handlers into one to execute at once
 const callAll =
   (...fns) =>
   (...args) =>
@@ -31,53 +33,28 @@ function toggleReducer(state, {type, initialState}) {
 function useToggle({
   initialOn = false,
   reducer = toggleReducer,
-  // 🐨 add an `onChange` prop.
   onChange,
-  // 🐨 add an `on` option here
-  // 💰 you can alias it to `controlledOn` to avoid "variable shadowing."
   on: controlledOn,
 } = {}) {
   const {current: initialState} = React.useRef({on: initialOn})
   const [state, dispatch] = React.useReducer(reducer, initialState)
-  // 🐨 determine whether on is controlled and assign that to `onIsControlled`
-  const onIsControlled = controlledOn != null
 
-  // 🐨 Replace the next line with `const on = ...` which should be `controlledOn` if
-  // `onIsControlled`, otherwise, it should be `state.on`.
-  // const {on} = state
+  const onIsControlled = controlledOn != null // it mean that the parent component is controlling the toggle's state
   const on = onIsControlled ? controlledOn : state.on
+  // if onIsControlled is not not null or undefined then get the
+  //on from the parameter which provided by the user of our hook
+  // if it's undefined or not null then get from that default state which is state.on
 
-  // We want to call `onChange` any time we need to make a state change, but we
-  // only want to call `dispatch` if `!onIsControlled` (otherwise we could get
-  // unnecessary renders).
-  // 🐨 To simplify things a bit, let's make a `dispatchWithOnChange` function
-  // right here. This will:
-  // 1. accept an action
-  // 2. if onIsControlled is false, call dispatch with that action
-  // 3. Then call `onChange` with our "suggested changes" and the action.
   function dispatchWithOnChange(action) {
+    // if we are controlled from outside then we'll not update our internal state
     if (!onIsControlled) {
       dispatch(action)
     }
-    onChange?(reducer({...state, on}, action), action)
+    // the state that we're transition to so use reducer to get that state
+    // so the reducer can give us the new state
+    onChange?.(reducer({...state, on}, action), action)
   }
 
-  // 🦉 "Suggested changes" refers to: the changes we would make if we were
-  // managing the state ourselves. This is similar to how a controlled <input />
-  // `onChange` callback works. When your handler is called, you get an event
-  // which has information about the value input that _would_ be set to if that
-  // state were managed internally.
-  // So how do we determine our suggested changes? What code do we have to
-  // calculate the changes based on the `action` we have here? That's right!
-  // The reducer! So if we pass it the current state and the action, then it
-  // should return these "suggested changes!"
-  //
-  // 💰 Sorry if Olivia the Owl is cryptic. Here's what you need to do for that onChange call:
-  // `onChange(reducer({...state, on}, action), action)`
-  // 💰 Also note that user's don't *have* to pass an `onChange` prop (it's not required)
-  // so keep that in mind when you call it! How could you avoid calling it if it's not passed?
-
-  // make these call `dispatchWithOnChange` instead
   const toggle = () => dispatchWithOnChange({type: actionTypes.toggle})
   const reset = () =>
     dispatchWithOnChange({type: actionTypes.reset, initialState})
@@ -168,5 +145,5 @@ export {Toggle}
 
 /*
 eslint
-  no-unused-vars: "off",
+  no-unused-expressions: "off",
 */
